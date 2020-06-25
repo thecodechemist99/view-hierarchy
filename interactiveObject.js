@@ -53,6 +53,35 @@ export default class InteractiveObject extends DisplayObject {
     );
   }
 
+  hitTest(x, y) {
+    let e = this;
+    let m = createVector(x, y);
+    let s = 1;
+
+    while (e != undefined) {
+      let vt = createVector(e.x, e.y);
+      if (e.parent != undefined) {
+        vt.mult(e.parent.scale);
+      }
+      let r = e.rotation;
+
+      // let vr = p5.Vector.fromAngle(e.rotation);
+      // let v = p5.Vector.sub(vt, vr);
+
+      m = p5.Vector.sub(m, vt);
+      m.x = m.x * cos(-r) - m.y * sin(-r) ;
+      m.y = m.x * sin(-r) + m.y * cos(-r);
+      s *= e.scale;
+
+      e = e.parent;
+    }
+
+    return (
+      m.x > 0 && m.x < this.width * s &&
+      m.y > 0 && m.y < this.height * s
+    );
+  }
+
   pressed() {}
 
   clicked() {}
